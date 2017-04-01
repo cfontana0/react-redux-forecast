@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
-import { Sparklines, SparklinesLine, SparklinesReferenceLine } from 'react-sparklines';
-import _ from 'lodash';
+import PieChart from 'react-simple-pie-chart';
 
+export const CHART_COLORS = ['#d34944', '#44d349', '#4944d3', '#44ced3', '#d344ce', '#ced344', '#4487d3', '#44d391', '#9144d3', '#d39144', '#44d34a'];
 
 class Chart extends Component {
-    average(data) {
-        return _.round(_.sum(data) / data.length);
+    getRandomColor() {
+        const position = Math.round(Math.random() * (CHART_COLORS.length - 1));
+
+        return CHART_COLORS[position];
+    }
+    prepareData() {
+        return this.props.data.map((value) => {
+            return { value, color: this.getRandomColor()};
+        });
     }
     render() {
-        const data = this.props.data;
-        const color = this.props.color;
-        const unit = this.props.unit;
-
-        if (data) {
+        if (this.props.data) {
             return (
                 <div>
-                    <Sparklines data={data}>
-                        <SparklinesLine height={120} width={180} color={color} />
-                        <SparklinesReferenceLine type="avg" />
-                    </Sparklines>
-                    <div>{this.average(data)}{unit}</div>
+                    <PieChart
+                      slices={this.prepareData()}
+                    />
                 </div>
             )
         }
